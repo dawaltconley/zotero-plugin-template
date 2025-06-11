@@ -1,5 +1,5 @@
 import pluginCss from './styles.scss';
-import { config } from '../package.json';
+import { config, version as packageVersion } from '../package.json';
 
 export interface PluginOptions {
   id: string;
@@ -20,9 +20,9 @@ export class Plugin {
   }
 
   constructor({
-    id = 'plugin-name@dylan.ac',
-    stylesId = 'pluginStyles',
-    version,
+    id = config.addonID,
+    stylesId = `${config.addonRef}__pluginStyles`,
+    version = packageVersion,
     rootURI,
   }: PluginOptions) {
     this.id = id;
