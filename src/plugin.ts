@@ -32,14 +32,36 @@ export class Plugin {
   }
 
   async startup(): Promise<void> {
-    Zotero.getMainWindows().forEach((w) => this.addMenuItems(w));
+    this.addToAllWindows();
     this.registerObserver();
     await this.styleExistingTabs();
   }
 
   shutdown(): void {
-    Zotero.getMainWindows().forEach((w) => this.removeMenuItems(w));
+    this.removeFromAllWindows();
     this.unregisterObserver();
+  }
+
+  addToWindow(window: _ZoteroTypes.MainWindow): void {
+    this.addMenuItems(window);
+  }
+
+  addToAllWindows(): void {
+    Zotero.getMainWindows().forEach((win) => {
+      if (!win.ZoteroPane) return;
+      this.addToWindow(win);
+    });
+  }
+
+  removeFromWindow(window: _ZoteroTypes.MainWindow): void {
+    this.removeMenuItems(window);
+  }
+
+  removeFromAllWindows(): void {
+    Zotero.getMainWindows().forEach((win) => {
+      if (!win.ZoteroPane) return;
+      this.removeFromWindow(win);
+    });
   }
 
   async attachStylesToReader(reader: _ZoteroTypes.ReaderInstance) {

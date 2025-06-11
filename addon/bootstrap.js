@@ -20,6 +20,14 @@ async function startup({ id, version, rootURI }) {
   await plugin.startup();
 }
 
+function onMainWindowLoad({ window }) {
+  plugin?.addToWindow(window);
+}
+
+function onMainWindowUnload({ window }) {
+  plugin?.removeFromWindow(window);
+}
+
 function shutdown() {
   log('Shutting down plugin');
   plugin?.shutdown();
