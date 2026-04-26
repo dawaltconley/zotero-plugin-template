@@ -10,5 +10,25 @@ export const isSnapshotReader = (
   r: _ZoteroTypes.ReaderInstance,
 ): r is _ZoteroTypes.ReaderInstance<'snapshot'> => r.type === 'snapshot';
 
-export const isIframe = (e: Element): e is HTMLIFrameElement =>
+export const isIFrame = (e: Element): e is HTMLIFrameElement =>
   e.tagName.toUpperCase() === 'IFRAME';
+
+export async function waitForReader(
+  reader: _ZoteroTypes.ReaderInstance,
+): Promise<void> {
+  await Promise.all([reader._waitForReader(), reader._initPromise]);
+}
+
+export async function waitForInternalReader(
+  reader: _ZoteroTypes.ReaderInstance,
+): Promise<void> {
+  if (reader._internalReader) {
+    await reader._internalReader._primaryView.initializedPromise;
+  }
+}
+
+export function getCurrentReader(
+  window: _ZoteroTypes.MainWindow,
+): _ZoteroTypes.ReaderInstance {
+  return Zotero.Reader.getByTabID(window.Zotero_Tabs.selectedID);
+}
